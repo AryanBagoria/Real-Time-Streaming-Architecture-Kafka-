@@ -1,58 +1,61 @@
-Real-Time Data Processing with Airflow, Kafka, and Spark
+# Real-Time Data Processing with Airflow, Kafka, and Spark
 
-Project Overview
-
-This project demonstrates a real-time data processing pipeline using Airflow, Kafka, and Spark. It fetches data from the Random User Generator API
- and processes it from raw messy data to clean, structured data stored in Cassandra for further analytics.
+## Project Overview
+This project demonstrates a **real-time data processing pipeline** using [Airflow](https://airflow.apache.org/), [Kafka](https://kafka.apache.org/), and [Spark](https://spark.apache.org/).  
+It fetches data from the [Random User Generator API](https://randomuser.me/) and processes it from raw messy data to **clean, structured data** stored in [Cassandra](http://cassandra.apache.org/) for analytics and reporting.
 
 The pipeline involves:
 
-Data Extraction: Airflow DAGs extract data from the API periodically.
+1. **Data Extraction**: Airflow DAGs extract data from the API periodically.  
+2. **Staging Area**: Raw data in JSON format is stored in [PostgreSQL](https://www.postgresql.org/) as a staging area.  
+3. **Real-Time Streaming**: Kafka streams the data in real time to the Spark cluster.  
+4. **Data Cleaning & Transformation**: Spark jobs process, clean, and transform the data.  
+5. **Final Storage**: Cleaned and transformed data is stored in Cassandra for analytics and downstream applications.
 
-Staging Area: Raw data in JSON format is stored in PostgreSQL as a staging area.
+---
 
-Real-Time Streaming: Kafka streams the data in real time to the Spark cluster.
-
-Data Cleaning & Transformation: Spark jobs process, clean, and transform the data.
-
-Final Storage: Cleaned and transformed data is stored in Cassandra for analytics and downstream applications.
-
-Architecture
+## Architecture
 
 The architecture consists of:
 
-Airflow: Orchestrates the pipeline and manages scheduling using DAGs.
+- **Airflow**: Orchestrates the pipeline and manages scheduling using DAGs.  
+  ![Airflow DAG](images/Airflow_Dag.png)
 
-Kafka: Provides a high-throughput, real-time data streaming layer.
+- **Docker Containers**: Containers used for Airflow, Kafka, Spark, Postgres, and Cassandra.  
+  ![Docker Containers](images/docker_containers_used.png)
 
-Spark: Performs data cleaning and transformation on streaming data.
+- **Overall Architecture**: Shows the flow from API → Airflow → Postgres → Kafka → Spark → Cassandra.  
+  ![Architecture](images/Architecture.png)
 
-PostgreSQL: Acts as a staging area for raw JSON data.
+- **Kafka Streaming**: Handles real-time streaming of data to Spark.  
+  ![Kafka Streaming](images/Kafka-streaming.png)
 
-Cassandra: Stores cleaned and transformed data for analytics and reporting.
+- **Raw Messy Data in Postgres**: JSON data stored temporarily in PostgreSQL.  
+  ![Raw Data](images/Raw_messy_data_stored_in_postgres.png)
 
-Features
+- **Clean Data in Cassandra**: Structured and clean data ready for analytics.  
+  ![Clean Data](images/Clean_data_in_cassandra.png)
 
-Real-time data ingestion from APIs
+---
 
-Messy JSON data handling and staging
+## Features
 
-Stream processing with Kafka and Spark
+- Real-time data ingestion from APIs  
+- Messy JSON data handling and staging  
+- Stream processing with Kafka and Spark  
+- Cleaned and structured data storage in Cassandra  
+- Fully automated pipeline using Airflow DAGs  
 
-Cleaned and structured data storage in Cassandra
+---
 
-Fully automated pipeline using Airflow DAGs
+## Technologies Used
 
-Technologies Used
+- [Python](https://www.python.org/)  
+- [Apache Airflow](https://airflow.apache.org/)  
+- [Apache Kafka](https://kafka.apache.org/)  
+- [Apache Spark](https://spark.apache.org/)  
+- [PostgreSQL](https://www.postgresql.org/)  
+- [Cassandra](http://cassandra.apache.org/)  
 
-Python
+---
 
-Apache Airflow
-
-Apache Kafka
-
-Apache Spark
-
-PostgreSQL
-
-Cassandra
