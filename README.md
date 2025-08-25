@@ -1,5 +1,5 @@
 # Real-Time Data Processing with Airflow, Kafka, and Spark
-
+  ![Architecture](images/Architecture.png)
 ## Project Overview
 This project demonstrates a **real-time data processing pipeline** using [Airflow](https://airflow.apache.org/), [Kafka](https://kafka.apache.org/), and [Spark](https://spark.apache.org/).  
 It fetches data from the [Random User Generator API](https://randomuser.me/) and processes it from raw messy data to **clean, structured data** stored in [Cassandra](http://cassandra.apache.org/) for analytics and reporting.
