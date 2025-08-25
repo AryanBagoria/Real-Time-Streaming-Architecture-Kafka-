@@ -55,7 +55,8 @@ The architecture consists of:
 - [Apache Kafka](https://kafka.apache.org/)  
 - [Apache Spark](https://spark.apache.org/)  
 - [PostgreSQL](https://www.postgresql.org/)  
-- [Cassandra](http://cassandra.apache.org/)  
+- [Cassandra](http://cassandra.apache.org/)
+- [Docker](https://www.docker.com/community/)  
 
 ---
 
