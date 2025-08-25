@@ -1,0 +1,94 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    
+  kafdrop:
+    image: obsidiandynamics/kafdrop
+    depends_on:
+      - kafka
+    environment:
+      KAFKA_BROKERCONNECT: "kafka:9092"
+    ports:
+      - "9000:9000"
+
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - "9092:9092"
+
+  airflow:
+    image: apache/airflow:2.7.1
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+    depends_on:
+      - postgres
+      - kafka
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/logs:/opt/airflow/logs
+      - ./airflow/plugins:/opt/airflow/plugins
+      - ./airflow/requirements.txt:/requirements.txt
+    ports:
+      - "8080:8080"
+    command: >
+      bash -c "pip install -r /requirements.txt &&
+               airflow db init &&
+               airflow users create --username admin --password admin --firstname Aryan --lastname Bagoria --role Admin --email admin@example.com &&
+               airflow webserver & airflow scheduler"
+
+  spark-master:
+    image: bitnami/spark:3.5
+    container_name: spark-master
+    environment:
+      - SPARK_MODE=master
+      - SPARK_MASTER_HOST=spark-master
+      - SPARK_MASTER_PORT=7077
+      - SPARK_MASTER_WEBUI_PORT=8080
+    ports:
+      - "4040:4040"  # Spark UI
+      - "7077:7077"  # Spark Master
+      - "8080:8080"  # Spark Web UI
+    volumes:
+      - ./your-scripts:/opt/spark-apps
+
+  cassandra:
+    image: cassandra:4.1
+    environment:
+      CASSANDRA_CLUSTER_NAME: "analytics-cluster"
+      CASSANDRA_NUM_TOKENS: 256
+    ports:
+      - "9042:9042"
+    volumes:
+      - cassandra_data:/var/lib/cassandra
+      - ./sql:/sql
+
+volumes:
+  postgres_data:
+  cassandra_data:
